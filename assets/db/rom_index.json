@@ -1,0 +1,186 @@
+{
+    "aerofgt": {
+        "id": "aerofgt_arcade",
+        "file": "arcade\/aerofgt.zip",
+        "system": "arcade",
+        "name": "Aerofgt",
+        "ext": "zip",
+        "size": 2083061
+    },
+    "doubledr": {
+        "id": "doubledr_arcade",
+        "file": "arcade\/doubledr.zip",
+        "system": "arcade",
+        "name": "Doubledr",
+        "ext": "zip",
+        "size": 11515126
+    },
+    "doubledrbh": {
+        "id": "doubledrbh_arcade",
+        "file": "arcade\/doubledrbh.zip",
+        "system": "arcade",
+        "name": "Doubledrbh",
+        "ext": "zip",
+        "size": 11515131
+    },
+    "pbobble": {
+        "id": "pbobble_arcade",
+        "file": "arcade\/pbobble.zip",
+        "system": "arcade",
+        "name": "Pbobble",
+        "ext": "zip",
+        "size": 1030069
+    },
+    "ssriders": {
+        "id": "ssriders_arcade",
+        "file": "arcade\/ssriders.zip",
+        "system": "arcade",
+        "name": "Ssriders",
+        "ext": "zip",
+        "size": 2274598
+    },
+    "vendetta": {
+        "id": "vendetta_arcade",
+        "file": "arcade\/vendetta.zip",
+        "system": "arcade",
+        "name": "Vendetta",
+        "ext": "zip",
+        "size": 2807619
+    },
+    "galaga": {
+        "id": "galaga_classic",
+        "file": "classic\/galaga.zip",
+        "system": "classic",
+        "name": "Galaga",
+        "ext": "zip",
+        "size": 23176
+    },
+    "mspacman": {
+        "id": "mspacman_classic",
+        "file": "classic\/mspacman.zip",
+        "system": "classic",
+        "name": "Mspacman",
+        "ext": "zip",
+        "size": 21791
+    },
+    "pacman": {
+        "id": "pacman_classic",
+        "file": "classic\/pacman.zip",
+        "system": "classic",
+        "name": "Pacman",
+        "ext": "zip",
+        "size": 14145
+    },
+    "dino": {
+        "id": "dino_cps1",
+        "file": "cps1\/dino.zip",
+        "system": "cps1",
+        "name": "Dino",
+        "ext": "zip",
+        "size": 4116098
+    },
+    "knights": {
+        "id": "knights_cps1",
+        "file": "cps1\/knights.zip",
+        "system": "cps1",
+        "name": "Knights",
+        "ext": "zip",
+        "size": 2355202
+    },
+    "kod": {
+        "id": "kod_cps1",
+        "file": "cps1\/kod.zip",
+        "system": "cps1",
+        "name": "Kod",
+        "ext": "zip",
+        "size": 2365231
+    },
+    "punisher": {
+        "id": "punisher_cps1",
+        "file": "cps1\/punisher.zip",
+        "system": "cps1",
+        "name": "Punisher",
+        "ext": "zip",
+        "size": 4042628
+    },
+    "sf2ce": {
+        "id": "sf2ce_cps1",
+        "file": "cps1\/sf2ce.zip",
+        "system": "cps1",
+        "name": "Sf2ce",
+        "ext": "zip",
+        "size": 3584791
+    },
+    "avsp": {
+        "id": "avsp_cps2",
+        "file": "cps2\/avsp.zip",
+        "system": "cps2",
+        "name": "Avsp",
+        "ext": "zip",
+        "size": 8967476
+    },
+    "ddsomjr2": {
+        "id": "ddsomjr2_cps2",
+        "file": "cps2\/ddsomjr2.zip",
+        "system": "cps2",
+        "name": "Ddsomjr2",
+        "ext": "zip",
+        "size": 18800049
+    },
+    "ddtod": {
+        "id": "ddtod_cps2",
+        "file": "cps2\/ddtod.zip",
+        "system": "cps2",
+        "name": "Ddtod",
+        "ext": "zip",
+        "size": 10767266
+    },
+    "garou": {
+        "id": "garou_neogeo",
+        "file": "neogeo\/garou.zip",
+        "system": "neogeo",
+        "name": "Garou",
+        "ext": "zip",
+        "size": 82932421
+    },
+    "kof97": {
+        "id": "kof97_neogeo",
+        "file": "neogeo\/kof97.zip",
+        "system": "neogeo",
+        "name": "Kof97",
+        "ext": "zip",
+        "size": 30695741
+    },
+    "kof98": {
+        "id": "kof98_neogeo",
+        "file": "neogeo\/kof98.zip",
+        "system": "neogeo",
+        "name": "Kof98",
+        "ext": "zip",
+        "size": 42395836
+    },
+    "mslug": {
+        "id": "mslug_neogeo",
+        "file": "neogeo\/mslug.zip",
+        "system": "neogeo",
+        "name": "Mslug",
+        "ext": "zip",
+        "size": 15115413
+    },
+    "mslugx": {
+        "id": "mslugx_neogeo",
+        "file": "neogeo\/mslugx.zip",
+        "system": "neogeo",
+        "name": "Mslugx",
+        "ext": "zip",
+        "size": 30443659
+    },
+    "neogeo": {
+        "id": "neogeo_neogeo",
+        "file": "neogeo\/neogeo.zip",
+        "system": "neogeo",
+        "name": "Neogeo",
+        "ext": "zip",
+        "size": 1950045
+    }
+}

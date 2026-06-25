@@ -1,0 +1,60 @@
+[
+  {
+    "name": "Street Fighter 2",
+    "screenshot": "http://www.arcade-museum.com/images/118/1181242173113.png",
+    "files" : {
+      "sf2.zip": "../roms/sf2.zip"
+    },
+    "driver": "sf2"
+  },
+  {
+    "name": "Twin Cobra",
+    "screenshot": "http://www.hardcoregaming101.net/toaplan/Twin%20Cobra/Twin%20Cobra%2032.png",
+    "files" : {
+      "twincobr.zip": "../roms/twincobr.zip"
+    },
+    "driver": "twincobr"
+  },
+  {
+    "name": "Shinobi",
+    "screenshot": "http://img2.game-oldies.com/sites/default/files/titles/coin-op-arcade/shinobi.png",
+    "files" : {
+      "shinobi.zip": "../roms/shinobi.zip"
+    },
+    "driver": "shinobi"
+  },
+  {
+    "name": "Bubble Bobble",
+    "screenshot": "http://www.arcade-museum.com/images/118/118124206554.png",
+    "files" : {
+      "bublbobl.zip": "../roms/bublbobl.zip"
+    },
+    "driver": "bublbobl"
+  },
+  {
+    "name": "Snow Bros",
+    "screenshot": "http://coolrom.com/screenshots/mame/Snow%20Bros.%20-%20Nick%20%26%20Tom.jpg",
+    "files" : {
+      "snowbros.zip": "../roms/snowbros.zip"
+    },
+    "driver": "snowbros"
+  },
+  {
+    "name": "Legend Hero Tomna",
+    "screenshot": "http://image.jeuxvideo.com/images-sm/tu/l/e/legend-of-hero-tonma-turbografx-pc-engine-003.jpg",
+    "files" : {
+      "loht.zip": "../roms/loht.zip"
+    },
+    "emulator": "https://ia801201.us.archive.org/cors_get.php?path=%2F17%2Fitems%2Femularity_engine_v1%2Fmamem72.js.gz",
+    "driver": "loht"
+  },
+  {
+    "name": "Marvel Super Hero",
+    "screenshot": "http://www.winkawaks.org/org/roms/msh/msh.jpg",
+    "files" : {
+      "msh.zip": "../roms/msh.zip",
+      "qsound.zip": "../roms/qsound.zip"
+    },
+    "driver": "msh"
+  }
+]
