@@ -105,7 +105,6 @@ button.play {
 <select id="system">
     <option value="">All Systems</option>
     <option value="arcade">Arcade</option>
-    <option value="neogeo">NeoGeo</option>
     <option value="cps1">CPS1</option>
     <option value="cps2">CPS2</option>
     <option value="nes">NES</option>
@@ -129,6 +128,10 @@ button.play {
 <?php foreach ($roms as $key => $g): ?>
 
 <?php
+if (($g['system'] ?? '') === 'neogeo') {
+    continue;
+}
+
 $name = $names[$key] ?? $g['name'];
 $sys  = $g['system'];
 
