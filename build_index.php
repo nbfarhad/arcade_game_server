@@ -3,46 +3,24 @@
 $root = __DIR__ . "/roms";
 $out  = __DIR__ . "/assets/db/rom_index.json";
 
-/* -------------------------------------------------------
-   SYSTEMS YOU ACTUALLY USE
-------------------------------------------------------- */
-$systems = [
-    "arcade",
-    "cps1",
-    "cps2",
-    "neogeo",
-    "nes",
-    "snes",
-    "gba",
-    "gb",
-    "gbc",
-    "n64",
-    "psx",
-    "genesis",
-    "sms",
-    "gg",
-    "sega32x",
-    "segacd",
-    "saturn"
-];
-
 $index = [];
 
 /* -------------------------------------------------------
-   SCAN EACH SYSTEM FOLDER
+   SCAN EVERY ROM CATEGORY FOLDER
 ------------------------------------------------------- */
-foreach ($systems as $sys) {
+$systemDirs = glob($root . '/*', GLOB_ONLYDIR);
 
-    $dir = "$root/$sys";
+if ($systemDirs === false) {
+    $systemDirs = [];
+}
 
-    if (!is_dir($dir)) continue;
+foreach ($systemDirs as $dirPath) {
+    $sys = basename($dirPath);
 
-    foreach (scandir($dir) as $file) {
-
+    foreach (scandir($dirPath) as $file) {
         if ($file === '.' || $file === '..') continue;
 
-        $full = "$dir/$file";
-
+        $full = "$dirPath/$file";
         if (!is_file($full)) continue;
 
         $name = pathinfo($file, PATHINFO_FILENAME);
@@ -57,9 +35,6 @@ foreach ($systems as $sys) {
     }
 }
 
-/* -------------------------------------------------------
-   WRITE JSON
-------------------------------------------------------- */
 file_put_contents(
     $out,
     json_encode($index, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
