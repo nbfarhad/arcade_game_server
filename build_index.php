@@ -26,23 +26,12 @@ $systems = [
     "saturn"
 ];
 
-/* -------------------------------------------------------
-   FOLDERS TO INCLUDE ON DISK BUT NOT SHOW IN FRONTEND
-------------------------------------------------------- */
-$hiddenFolders = [
-    "neogeo"
-];
-
 $index = [];
 
 /* -------------------------------------------------------
    SCAN EACH SYSTEM FOLDER
 ------------------------------------------------------- */
 foreach ($systems as $sys) {
-
-    if (in_array($sys, $hiddenFolders, true)) {
-        continue;
-    }
 
     $dir = "$root/$sys";
 
