@@ -107,6 +107,7 @@ button.play {
     <option value="arcade">Arcade</option>
     <option value="cps1">CPS1</option>
     <option value="cps2">CPS2</option>
+    <option value="neogeo">NeoGeo</option>
     <option value="nes">NES</option>
     <option value="snes">SNES</option>
     <option value="gba">GBA</option>
@@ -128,10 +129,6 @@ button.play {
 <?php foreach ($roms as $g): ?>
 
 <?php
-if (($g['system'] ?? '') === 'neogeo') {
-    continue;
-}
-
 $baseKey = pathinfo($g['file'], PATHINFO_FILENAME);
 $name = $names[$baseKey] ?? $g['name'];
 $sys  = $g['system'];
