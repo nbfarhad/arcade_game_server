@@ -50,13 +50,16 @@ $coreMap = [
 ];
 
 $core = $coreMap[$game['system']] ?? "fbneo";
+$gameUrlJs = json_encode($BASE . "/roms/" . $game['file'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+$coreJs = json_encode($core, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+$title = htmlspecialchars($game['name'], ENT_QUOTES, 'UTF-8');
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title><?= htmlspecialchars($game['name']) ?></title>
+<title><?= $title ?></title>
 
 <style>
 body {
@@ -78,16 +81,16 @@ body {
 EJS_player = "#game";
 
 /* IMPORTANT: correct local path */
-EJS_pathtodata = "<?= $BASE ?>/emulatorjs/data/";
+EJS_pathtodata = <?= json_encode($BASE . "/emulatorjs/data/", JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
 
 /* DIRECT ROM LOAD (BEST PRACTICE) */
-EJS_gameUrl = "<?= $BASE ?>/roms/<?= htmlspecialchars($game['file']) ?>";
+EJS_gameUrl = <?= $gameUrlJs ?>;
 
-EJS_core = "<?= $core ?>";
+EJS_core = <?= $coreJs ?>;
 EJS_startOnLoaded = true;
 </script>
 
-<script src="<?= $BASE ?>/emulatorjs/data/loader.js"></script>
+<script src="<?= htmlspecialchars($BASE . '/emulatorjs/data/loader.js', ENT_QUOTES, 'UTF-8') ?>"></script>
 
 </body>
 </html>
