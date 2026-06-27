@@ -111,7 +111,16 @@ button.play {
     <option value="nes">NES</option>
     <option value="snes">SNES</option>
     <option value="gba">GBA</option>
+    <option value="gb">GB</option>
+    <option value="gbc">GBC</option>
+    <option value="n64">N64</option>
     <option value="psx">PSX</option>
+    <option value="genesis">Genesis</option>
+    <option value="sms">SMS</option>
+    <option value="gg">GG</option>
+    <option value="sega32x">Sega 32X</option>
+    <option value="segacd">Sega CD</option>
+    <option value="saturn">Saturn</option>
 </select>
 </header>
 
@@ -131,24 +140,27 @@ foreach (['png','jpg','jpeg','webp'] as $ext) {
         break;
     }
 }
+
+$fileJs = json_encode($g['file'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+$keyJs  = json_encode($key, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 ?>
 
 <div class="card"
-data-name="<?= strtolower($name) ?>"
-data-system="<?= $sys ?>">
+data-name="<?= htmlspecialchars(strtolower($name), ENT_QUOTES, 'UTF-8') ?>"
+data-system="<?= htmlspecialchars($sys, ENT_QUOTES, 'UTF-8') ?>">
 
 <?php if ($thumbFile): ?>
-    <img class="thumb" src="<?= htmlspecialchars($thumbFile) ?>">
+    <img class="thumb" src="<?= htmlspecialchars($thumbFile, ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($name, ENT_QUOTES, 'UTF-8') ?>">
 <?php else: ?>
     <div class="thumb"></div>
 <?php endif; ?>
 
-<div><b><?= htmlspecialchars($name) ?></b></div>
+<div><b><?= htmlspecialchars($name, ENT_QUOTES, 'UTF-8') ?></b></div>
 
-<div class="system"><?= strtoupper($sys) ?></div>
+<div class="system"><?= htmlspecialchars(strtoupper($sys), ENT_QUOTES, 'UTF-8') ?></div>
 
 <button class="play"
-onclick="play('<?= $g['file'] ?>','<?= $key ?>')">
+onclick='play(<?= $fileJs ?>, <?= $keyJs ?>)'>
 PLAY
 </button>
 
