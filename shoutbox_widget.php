@@ -5,12 +5,11 @@
 
 <div id="shoutbox">
     <div id="shout-header">
-        <span>💬 Live Chat</span>
+        <span class="shout-title">💬 Live Chat</span>
         <span id="shout-online-count">● 0 online</span>
     </div>
 
     <div id="shout-online-list"></div>
-
     <div id="shout-messages"></div>
 
     <div id="shout-form">
@@ -23,194 +22,217 @@
     </div>
 </div>
 
-<!-- Mobile toggle button -->
 <button id="shout-toggle" onclick="toggleShoutbox()">💬 Chat</button>
 
 <style>
-    /* ---- Desktop: sidebar on the right ---- */
-    body {
-        padding-right: 310px;
-    }
+:root {
+    --chat-bg: rgba(11, 18, 35, 0.92);
+    --chat-panel: rgba(17, 24, 39, 0.88);
+    --chat-border: rgba(255,255,255,0.08);
+    --chat-text: #e5eefc;
+    --chat-muted: #8b9ab8;
+    --chat-accent: #ff4d6d;
+    --chat-accent-2: #38bdf8;
+}
+
+body {
+    padding-right: 320px;
+}
+
+#shoutbox {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 310px;
+    height: 100vh;
+    background: linear-gradient(180deg, rgba(17,24,39,0.96), rgba(10,15,28,0.96));
+    border-left: 1px solid var(--chat-border);
+    box-shadow: -16px 0 50px rgba(0,0,0,0.35);
+    display: flex;
+    flex-direction: column;
+    z-index: 9999;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    backdrop-filter: blur(14px);
+}
+
+#shout-toggle { display: none; }
+
+#shout-header {
+    padding: 14px 14px 12px;
+    color: var(--chat-text);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--chat-border);
+    background: linear-gradient(180deg, rgba(255,77,109,0.14), rgba(56,189,248,0.06));
+    flex-shrink: 0;
+}
+
+.shout-title {
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
+#shout-online-count {
+    font-size: 0.78rem;
+    color: #9cf5c7;
+}
+
+#shout-online-list {
+    background: rgba(6,10,20,0.65);
+    padding: 8px 12px;
+    font-size: 0.75rem;
+    color: #9cf5c7;
+    min-height: 26px;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--chat-border);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#shout-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    scroll-behavior: smooth;
+}
+
+#shout-messages::-webkit-scrollbar { width: 5px; }
+#shout-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.18); border-radius: 99px; }
+
+.shout-msg {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 10px 12px;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.18);
+    word-break: break-word;
+}
+
+.shout-msg-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 4px;
+}
+
+.shout-msg-name {
+    color: #ff90a3;
+    font-weight: 700;
+}
+
+.shout-msg-time {
+    color: var(--chat-muted);
+    font-size: 0.72rem;
+}
+
+.shout-msg-text {
+    color: var(--chat-text);
+}
+
+.shout-empty {
+    color: var(--chat-muted);
+    font-size: 0.82rem;
+    text-align: center;
+    padding: 24px 0;
+}
+
+#shout-form {
+    padding: 12px;
+    border-top: 1px solid var(--chat-border);
+    background: rgba(10,15,28,0.92);
+    flex-shrink: 0;
+}
+
+#shout-form input {
+    width: 100%;
+    background: rgba(6,10,20,0.88);
+    border: 1px solid var(--chat-border);
+    border-radius: 10px;
+    color: var(--chat-text);
+    padding: 9px 11px;
+    font-size: 0.86rem;
+    outline: none;
+    margin-bottom: 7px;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+#shout-form input:focus {
+    border-color: rgba(56,189,248,0.4);
+    box-shadow: 0 0 0 3px rgba(56,189,248,0.12);
+}
+
+#shout-input-row {
+    display: flex;
+    gap: 8px;
+}
+
+#shout-input-row input { margin-bottom: 0; }
+
+#shout-send {
+    background: linear-gradient(135deg, var(--chat-accent), #ff6b3d);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 9px 12px;
+    cursor: pointer;
+    font-size: 1rem;
+    flex-shrink: 0;
+    transition: transform .15s ease, filter .15s ease;
+    box-shadow: 0 10px 22px rgba(255,77,109,0.24);
+}
+
+#shout-send:hover { transform: translateY(-1px); filter: brightness(1.05); }
+
+#shout-error {
+    color: #ff7b93;
+    font-size: 0.75rem;
+    margin-top: 6px;
+    min-height: 16px;
+}
+
+@media (max-width: 768px) {
+    body { padding-right: 0 !important; }
 
     #shoutbox {
-        position: fixed;
-        top: 0;
+        top: auto;
+        bottom: 0;
+        left: 0;
         right: 0;
-        width: 300px;
-        height: 100vh;
-        background: #1a1a20;
-        border-left: 2px solid #2f3542;
-        display: flex;
-        flex-direction: column;
-        z-index: 500;
-        font-family: 'Segoe UI', Arial, sans-serif;
-    }
-
-    #shout-toggle { display: none; }
-
-    /* ---- Mobile: hidden by default, toggled ---- */
-    @media (max-width: 768px) {
-        body {
-            padding-right: 0 !important;
-        }
-
-        #shoutbox {
-            top: auto;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            width: 100%;
-            height: 60vh;
-            border-left: none;
-            border-top: 2px solid #ff4757;
-            border-radius: 12px 12px 0 0;
-            display: none;
-            z-index: 1000;
-        }
-
-        #shoutbox.mobile-open {
-            display: flex;
-        }
-
-        #shout-toggle {
-            display: block;
-            position: fixed;
-            bottom: 16px;
-            right: 16px;
-            background: #ff4757;
-            color: #fff;
-            border: none;
-            border-radius: 50px;
-            padding: 10px 18px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 1001;
-            box-shadow: 0 4px 15px rgba(255,71,87,0.4);
-        }
-    }
-
-    /* ---- Shoutbox internals ---- */
-    #shout-header {
-        background: #ff4757;
-        color: #fff;
-        padding: 12px 14px;
-        font-weight: bold;
-        font-size: 0.95rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-shrink: 0;
-    }
-
-    #shout-online-count {
-        font-size: 0.78rem;
-        opacity: 0.9;
-    }
-
-    #shout-online-list {
-        background: #121214;
-        padding: 6px 10px;
-        font-size: 0.75rem;
-        color: #2ed573;
-        min-height: 24px;
-        flex-shrink: 0;
-        border-bottom: 1px solid #2f3542;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    #shout-messages {
-        flex: 1;
-        overflow-y: auto;
-        padding: 10px;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        scroll-behavior: smooth;
-    }
-
-    #shout-messages::-webkit-scrollbar { width: 4px; }
-    #shout-messages::-webkit-scrollbar-thumb { background: #2f3542; border-radius: 4px; }
-
-    .shout-msg {
-        background: #1e1e24;
-        border: 1px solid #2f3542;
-        border-radius: 8px;
-        padding: 7px 10px;
-        font-size: 0.82rem;
-        line-height: 1.4;
-        word-break: break-word;
-    }
-
-    .shout-msg-header {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 3px;
-    }
-
-    .shout-msg-name { color: #ff4757; font-weight: bold; }
-    .shout-msg-time { color: #57606f; font-size: 0.72rem; }
-    .shout-msg-text { color: #e1e1e6; }
-
-    .shout-empty {
-        color: #57606f;
-        font-size: 0.82rem;
-        text-align: center;
-        padding: 20px 0;
-    }
-
-    #shout-form {
-        padding: 10px;
-        border-top: 1px solid #2f3542;
-        background: #1a1a20;
-        flex-shrink: 0;
-    }
-
-    #shout-form input {
         width: 100%;
-        background: #121214;
-        border: 1px solid #2f3542;
-        border-radius: 6px;
-        color: #e1e1e6;
-        padding: 7px 10px;
-        font-size: 0.85rem;
-        outline: none;
-        margin-bottom: 6px;
-        font-family: inherit;
-        box-sizing: border-box;
+        height: 62vh;
+        border-left: none;
+        border-top: 1px solid var(--chat-border);
+        border-radius: 18px 18px 0 0;
+        display: none;
     }
 
-    #shout-form input:focus { border-color: #ff4757; }
+    #shoutbox.mobile-open { display: flex; }
 
-    #shout-input-row {
-        display: flex;
-        gap: 6px;
-    }
-
-    #shout-input-row input { margin-bottom: 0; }
-
-    #shout-send {
-        background: #ff4757;
+    #shout-toggle {
+        display: block;
+        position: fixed;
+        bottom: 16px;
+        right: 16px;
+        background: linear-gradient(135deg, var(--chat-accent), #ff6b3d);
         color: #fff;
         border: none;
-        border-radius: 6px;
-        padding: 7px 12px;
+        border-radius: 999px;
+        padding: 11px 18px;
+        font-size: 0.9rem;
+        font-weight: 700;
         cursor: pointer;
-        font-size: 1rem;
-        flex-shrink: 0;
-        transition: background 0.2s;
+        z-index: 10001;
+        box-shadow: 0 10px 24px rgba(255,77,109,0.34);
     }
-
-    #shout-send:hover { background: #e84057; }
-
-    #shout-error {
-        color: #ff4757;
-        font-size: 0.75rem;
-        margin-top: 5px;
-        min-height: 16px;
-    }
+}
 </style>
 
 <script>
@@ -291,10 +313,10 @@ function toggleShoutbox() {
         count.textContent = `● ${users.length} online`;
         if (users.length === 0) {
             list.textContent = 'No one online right now';
-            list.style.color = '#57606f';
+            list.style.color = '#8b9ab8';
         } else {
             list.textContent = users.map(u => u.name || 'Guest').join(' · ');
-            list.style.color = '#2ed573';
+            list.style.color = '#9cf5c7';
         }
     }
 
