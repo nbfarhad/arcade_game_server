@@ -1,156 +1,150 @@
 <?php
-// simple include guard
-$BASE = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
-?>
+// ---------------------------------------------------------------
+// shoutbox.php — handles AJAX read/write requests
+// Include this at the top of any page that needs the shoutbox.
+// ---------------------------------------------------------------
 
-<style>
-#shoutbox {
-    position: fixed;
-    right: 10px;
-    bottom: 10px;
-    width: 260px;
-    height: 400px;
-    background: #1b1c22;
-    border: 1px solid #2a2b33;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    font-family: Arial;
-    z-index: 9999;
+$messagesFile  = __DIR__ . '/assets/db/shout_messages.json';
+$rateLimitFile = __DIR__ . '/assets/db/shout_ratelimit.json';
+$onlineFile    = __DIR__ . '/assets/db/shout_online.json';
+
+// --- Config ---
+$maxMessages   = 100;
+$maxNameLen    = 20;
+$maxMsgLen     = 200;
+$onlineTimeout = 300;  // 5 minutes until user considered offline
+
+// --- Flood config ---
+$floodWindow   = 10;   // seconds to track
+$floodMaxMsgs  = 3;    // max messages allowed within that window
+
+if (!is_dir(__DIR__ . '/assets/db')) {
+    @mkdir(__DIR__ . '/assets/db', 0775, true);
 }
 
-#shout-header {
-    background: #111218;
-    padding: 8px;
-    font-size: 13px;
-    text-align: center;
-    color: #fff;
-    border-bottom: 1px solid #2a2b33;
+function shoutbox_read_json($path, $default = []) {
+    if (!file_exists($path)) {
+        return $default;
+    }
+    $data = json_decode(file_get_contents($path), true);
+    return is_array($data) ? $data : $default;
 }
 
-#shout-messages {
-    flex: 1;
-    padding: 8px;
-    overflow-y: auto;
-    font-size: 12px;
-    color: #ddd;
+function shoutbox_write_json($path, $data) {
+    file_put_contents($path, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), LOCK_EX);
 }
 
-.msg {
-    margin-bottom: 6px;
+function shoutbox_trim_text($value, $maxLen) {
+    $value = trim(strip_tags((string) $value));
+    if (function_exists('mb_substr')) {
+        return mb_substr($value, 0, $maxLen);
+    }
+    return substr($value, 0, $maxLen);
 }
 
-.msg b {
-    color: #ffcc00;
+function shoutbox_html($value) {
+    return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 }
 
-#shout-input {
-    display: flex;
-    flex-direction: column;
-    padding: 6px;
-    border-top: 1px solid #2a2b33;
-    gap: 5px;
-}
+// ---------------------------------------------------------------
+// AJAX endpoint — called by JS, returns JSON
+// ---------------------------------------------------------------
+if (isset($_GET['shout_action'])) {
+    header('Content-Type: application/json; charset=UTF-8');
 
-#shout-input input,
-#shout-input textarea {
-    width: 100%;
-    border: none;
-    border-radius: 6px;
-    padding: 6px;
-    font-size: 12px;
-    outline: none;
-    background: #0f0f12;
-    color: white;
-}
+    $action = $_GET['shout_action'];
+    $ip     = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+    $name   = shoutbox_trim_text($_POST['name'] ?? $_GET['name'] ?? '', $maxNameLen);
 
-#shout-input button {
-    background: #ff4757;
-    border: none;
-    padding: 6px;
-    border-radius: 6px;
-    color: white;
-    cursor: pointer;
-}
+    // --- Track online users ---
+    $online = shoutbox_read_json($onlineFile, []);
 
-#online {
-    font-size: 11px;
-    color: #aaa;
-    margin-top: 4px;
-}
-</style>
+    $now = time();
 
-<div id="shoutbox">
-    <div id="shout-header">💬 Live Chat <span id="online"></span></div>
+    // Remove stale users
+    foreach ($online as $k => $v) {
+        if (($now - (int)($v['time'] ?? 0)) > $onlineTimeout) unset($online[$k]);
+    }
 
-    <div id="shout-messages"></div>
+    // Update current user if name provided
+    if ($name !== '') {
+        $online[$ip] = ['name' => shoutbox_html($name), 'time' => $now];
+    }
 
-    <div id="shout-input">
-        <input id="name" placeholder="Your name">
-        <textarea id="msg" placeholder="Say something..." rows="2"></textarea>
-        <button onclick="sendMsg()">Send</button>
-    </div>
-</div>
+    shoutbox_write_json($onlineFile, $online);
 
-<script>
-let lastTS = 0;
-let active = true;
+    // --- POST message ---
+    if ($action === 'post') {
+        $msg = shoutbox_trim_text($_POST['msg'] ?? '', $maxMsgLen);
 
-document.addEventListener("visibilitychange", () => {
-    active = !document.hidden;
-});
-
-function fetchMsgs() {
-    if (!active) return;
-
-    fetch("<?= $BASE ?>/shoutbox.php?shout_action=fetch&since=" + lastTS)
-        .then(r => r.json())
-        .then(data => {
-            let box = document.getElementById("shout-messages");
-
-            data.messages.forEach(m => {
-                let div = document.createElement("div");
-                div.className = "msg";
-                div.innerHTML = `<b>${m.name}</b>: ${m.msg}`;
-                box.appendChild(div);
-            });
-
-            if (data.messages.length) {
-                lastTS = data.ts;
-                box.scrollTop = box.scrollHeight;
-            }
-
-            document.getElementById("online").innerText =
-                " • " + (data.online?.length || 0) + " online";
-        });
-}
-
-function sendMsg() {
-    let name = document.getElementById("name").value;
-    let msg  = document.getElementById("msg").value;
-
-    if (!name || !msg) return;
-
-    fetch("<?= $BASE ?>/shoutbox.php?shout_action=post", {
-        method: "POST",
-        headers: {"Content-Type": "application/x-www-form-urlencoded"},
-        body: "name=" + encodeURIComponent(name) +
-              "&msg=" + encodeURIComponent(msg)
-    })
-    .then(r => r.json())
-    .then(res => {
-        if (res.ok) {
-            document.getElementById("msg").value = "";
-            fetchMsgs();
+        if ($name === '' || $msg === '') {
+            echo json_encode(['ok' => false, 'error' => 'Name and message required.'], JSON_UNESCAPED_UNICODE);
+            exit;
         }
-    });
+        if (strlen($name) > $maxNameLen) {
+            echo json_encode(['ok' => false, 'error' => 'Name too long (max ' . $maxNameLen . ' chars).'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+        if (strlen($msg) > $maxMsgLen) {
+            echo json_encode(['ok' => false, 'error' => 'Message too long (max ' . $maxMsgLen . ' chars).'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        // --- Flood check: max N messages per window ---
+        $rateLimit = shoutbox_read_json($rateLimitFile, []);
+        $timestamps = $rateLimit[$ip] ?? [];
+        $timestamps = array_values(array_filter($timestamps, fn($t) => ($now - (int)$t) < $floodWindow));
+
+        if (count($timestamps) >= $floodMaxMsgs) {
+            $wait = $floodWindow - ($now - (int)$timestamps[0]);
+            echo json_encode(['ok' => false, 'error' => "Too many messages! Wait {$wait}s."], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        $timestamps[] = $now;
+        $rateLimit[$ip] = $timestamps;
+
+        foreach ($rateLimit as $k => $v) {
+            $rateLimit[$k] = array_values(array_filter($v, fn($t) => ($now - (int)$t) < $floodWindow));
+            if (empty($rateLimit[$k])) unset($rateLimit[$k]);
+        }
+
+        // Save message
+        $messages = shoutbox_read_json($messagesFile, []);
+
+        $messages[] = [
+            'name' => shoutbox_html($name),
+            'msg'  => shoutbox_html($msg),
+            'time' => date('H:i'),
+            'ts'   => $now,
+        ];
+
+        if (count($messages) > $maxMessages) {
+            $messages = array_slice($messages, -$maxMessages);
+        }
+
+        shoutbox_write_json($messagesFile, $messages);
+        shoutbox_write_json($rateLimitFile, $rateLimit);
+
+        echo json_encode(['ok' => true], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    // --- GET messages + online users ---
+    if ($action === 'fetch') {
+        $since = intval($_GET['since'] ?? 0);
+        $messages = shoutbox_read_json($messagesFile, []);
+
+        $new = array_values(array_filter($messages, fn($m) => (int)($m['ts'] ?? 0) > $since));
+
+        echo json_encode([
+            'messages' => $new,
+            'online'   => array_values($online),
+            'ts'       => $now,
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    echo json_encode(['ok' => false, 'error' => 'Unknown action.'], JSON_UNESCAPED_UNICODE);
+    exit;
 }
-
-// polling (optimized)
-setInterval(() => {
-    if (active) fetchMsgs();
-}, 3000);
-
-fetchMsgs();
-</script>
