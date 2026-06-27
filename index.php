@@ -125,27 +125,28 @@ button.play {
 
 <div class="grid">
 
-<?php foreach ($roms as $key => $g): ?>
+<?php foreach ($roms as $g): ?>
 
 <?php
 if (($g['system'] ?? '') === 'neogeo') {
     continue;
 }
 
-$name = $names[$key] ?? $g['name'];
+$baseKey = pathinfo($g['file'], PATHINFO_FILENAME);
+$name = $names[$baseKey] ?? $g['name'];
 $sys  = $g['system'];
 
 $thumbFile = null;
 foreach (['png','jpg','jpeg','webp'] as $ext) {
-    $try = $thumbPathFS . $key . "." . $ext;
+    $try = $thumbPathFS . $baseKey . "." . $ext;
     if (file_exists($try)) {
-        $thumbFile = $thumbPathURL . $key . "." . $ext;
+        $thumbFile = $thumbPathURL . $baseKey . "." . $ext;
         break;
     }
 }
 
 $fileJs = json_encode($g['file'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-$keyJs  = json_encode($key, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+$keyJs  = json_encode($baseKey, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 ?>
 
 <div class="card"
